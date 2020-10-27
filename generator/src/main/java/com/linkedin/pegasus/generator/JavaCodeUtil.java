@@ -146,6 +146,7 @@ public class JavaCodeUtil
         }
         else if (definedClass.outer() == null)
         {
+          // maybe to lower here -> do always (except when flag is set) -
           final File file = new File(targetDirectory, definedClass.fullName().replace('.', File.separatorChar) + ".java");
           generatedFiles.add(file);
         }

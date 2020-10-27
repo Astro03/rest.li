@@ -81,8 +81,29 @@ public class RestSpecCodec
   public ResourceSchema readResourceSchema(InputStream inputStream)
           throws IOException
   {
+      return readResourceSchema(inputStream, false);
+  }
+
+  /**
+   * Reads a ResourceSchema from the given input stream, fixes it if necessary, and returns it.
+   *
+   * @param inputStream inputStream to read the ResourceSchema from
+   * @param shouldLowerNamespace if true and namespace exists in data map, then lower case the namespace value; Otherwise, no change
+   * @return a ResourceSchema
+   * @throws IOException
+   */
+  public ResourceSchema readResourceSchema(InputStream inputStream, boolean shouldLowerNamespace)
+          throws IOException
+  {
     final DataMap data = _dataCodec.readMap(inputStream);
     fixupLegacyRestspec(data);
+    if (shouldLowerNamespace && data.containsKey("namespace")) {
+      String namespace = data.getString("namespace");
+      if (namespace != null) {
+        data.put("namespace", namespace.toLowerCase());
+//        data.put("namespace", namespace.toUpperCase());
+      }
+    }
     return new ResourceSchema(data);
   }
 

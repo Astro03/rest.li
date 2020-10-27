@@ -89,6 +89,8 @@ public class RestRequestBuilderGenerator
     final String generateImported = System.getProperty(PegasusDataTemplateGenerator.GENERATOR_GENERATE_IMPORTED);
     final String generateDataTemplates = System.getProperty(GENERATOR_REST_GENERATE_DATATEMPLATES);
     final String versionString = System.getProperty(GENERATOR_REST_GENERATE_VERSION);
+    final String shouldGenerateLowerPath = System.getProperty("generator.rest.generate.path.lowercase");
+    //System.out.println("astro : " + shouldGenerateLowerPath);
     final RestliVersion version = RestliVersion.lookUpRestliVersion(new Version(versionString));
     if (version == null)
     {
@@ -106,7 +108,8 @@ public class RestRequestBuilderGenerator
                                     version,
                                     deprecatedByVersion,
                                     args[0],
-                                    sources);
+                                    sources,
+                                    shouldGenerateLowerPath == null ? false : Boolean.parseBoolean(shouldGenerateLowerPath));
   }
 
   public static RestliVersion findDeprecatedVersion()
@@ -145,7 +148,30 @@ public class RestRequestBuilderGenerator
                version,
                deprecatedByVersion,
                targetDirectoryPath,
-               sources);
+               sources,
+               false);
+  }
+  public static GeneratorResult run(String resolverPath,
+                                    String defaultPackage,
+                                    String rootPath,
+                                    final boolean generateImported,
+                                    final boolean generateDataTemplates,
+                                    RestliVersion version,
+                                    RestliVersion deprecatedByVersion,
+                                    String targetDirectoryPath,
+                                    String[] sources)
+          throws IOException
+  {
+    return run(resolverPath,
+            defaultPackage,
+            rootPath,
+            generateImported,
+            generateDataTemplates,
+            version,
+            deprecatedByVersion,
+            targetDirectoryPath,
+            sources,
+            false);
   }
 
   public static GeneratorResult run(String resolverPath,
@@ -156,14 +182,17 @@ public class RestRequestBuilderGenerator
                                     RestliVersion version,
                                     RestliVersion deprecatedByVersion,
                                     String targetDirectoryPath,
-                                    String[] sources)
+                                    String[] sources,
+                                    boolean shouldLowerPath)
       throws IOException
   {
     final RestSpecParser parser = new RestSpecParser();
     final JavaRequestBuilderGenerator generator = new JavaRequestBuilderGenerator(resolverPath, defaultPackage, generateDataTemplates, version, deprecatedByVersion, rootPath);
     final ClassLoader classLoader = JavaCodeUtil.classLoaderFromResolverPath(resolverPath);
 
-    final RestSpecParser.ParseResult parseResult = parser.parseSources(sources);
+    final RestSpecParser.ParseResult parseResult = parser.parseSources(sources, shouldLowerPath);
+    //System.out.println("\n**********\ntargetDirectoryPath : " + targetDirectoryPath);
+    //System.out.println("**********\nsources: " + Arrays.toString(sources)+"========\n");
 
     final StringBuilder message = new StringBuilder();
     for (CodeUtil.Pair<ResourceSchema, File> pair : parseResult.getSchemaAndFiles())

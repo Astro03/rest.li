@@ -153,6 +153,7 @@ public class GenerateRestClientTask extends DefaultTask
         javaExecSpec.jvmArgs("-Dgenerator.rest.generate.datatemplates=false"); //RestRequestBuilderGenerator.run(generateDataTemplates)
         javaExecSpec.jvmArgs("-Dgenerator.rest.generate.version=1.0.0"); //RestRequestBuilderGenerator.run(version)
         javaExecSpec.jvmArgs("-Dgenerator.rest.generate.deprecated.version=" + deprecatedVersion); //RestRequestBuilderGenerator.run(deprecatedByVersion)
+        javaExecSpec.jvmArgs("-Dgenerator.rest.generate.path.lowercase=true");  //todo: fix this comment RestRequestBuilderGenerator.run(deprecatedByVersion) - make it an optional input
         javaExecSpec.jvmArgs("-Droot.path=" + getProject().getRootDir().getPath());
         javaExecSpec.args(_destinationDir.getAbsolutePath());
         javaExecSpec.args(sources);
@@ -177,6 +178,7 @@ public class GenerateRestClientTask extends DefaultTask
         javaExecSpec.jvmArgs("-Dgenerator.generate.imported=false"); //RestRequestBuilderGenerator.run(generateImported)
         javaExecSpec.jvmArgs("-Dgenerator.rest.generate.datatemplates=false"); //RestRequestBuilderGenerator.run(generateDataTemplates)
         javaExecSpec.jvmArgs("-Dgenerator.rest.generate.version=2.0.0"); //RestRequestBuilderGenerator.run(version)
+        javaExecSpec.jvmArgs("-Dgenerator.rest.generate.path.lowercase=true");  //RestRequestBuilderGenerator.run(shouldLowerPath) - make it an optional input
         javaExecSpec.jvmArgs("-Droot.path=" + getProject().getRootDir().getPath());
         javaExecSpec.args(_destinationDir.getAbsolutePath());
         javaExecSpec.args(sources);
